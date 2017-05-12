@@ -13,7 +13,12 @@ import (
 )
 
 func main() {
-	zeromessage := "太好了，現在所有的議題都有人負責"
+	zeromessages := []string{
+		"太好了，現在所有的議題都有人負責",
+		"Fantastic!! 今天沒有無主議題！",
+		"趁現在議題都有人負責時，快安穩的睡一覺吧",
+	}
+
 	normalmessage := "還有 %d 個議題沒人負責喔"
 
 	messages := []string{
@@ -31,6 +36,8 @@ func main() {
 		"給看到的人：King Bob 指定你負責以下議題",
 		"**s 看一下有沒有你喜歡的議題吧",
 		"接手一個議題，勝造七級浮屠",
+		"做個坑底之蛙也是可以抬頭挺胸的",
+		"留下來，或^H並帶一個議題走",
 	}
 
 	pwd, _ := osext.ExecutableFolder()
@@ -55,20 +62,21 @@ func main() {
 		var attaches []map[string]interface{}
 
 		count := len(feed.Items)
-		mainmessage := zeromessage
+		i := r.Intn(len(zeromessages))
+		mainmessage := zeromessages[i]
 
 		if count > 0 {
 			mainmessage = fmt.Sprintf(normalmessage, count)
 
 			attach := make(map[string]interface{})
-			attach["color"] = "#7CD197"
-			attach["title"] = "無主事務清單"
+			attach["title"] = "無主議題清單"
 			list, _ := config.Get("feed", "list")
 			attach["title_link"] = list
+			attach["text"] = "COSCUP 2017 所有沒有指派負責人的議題(issue)都在這"
 
 			attaches = append(attaches, attach)
 		}
-		if count >= 10 {
+		if count >= 8 {
 			i := r.Intn(len(messages))
 			mainmessage = messages[i]
 		}
@@ -110,7 +118,9 @@ func main() {
 			}
 		}
 
-		msg["attachments"] = attaches
+		if count > 0 {
+			msg["attachments"] = attaches
+		}
 
 		b, _ := json.Marshal(msg)
 		// body := string(b)
@@ -129,7 +139,7 @@ func main() {
 			}
 			defer resp.Body.Close()
 
-			fmt.Println("response Status:", resp.Status)
+			fmt.Println("Redmine to Slack - Response Status:", resp.Status)
 		}
 	}
 

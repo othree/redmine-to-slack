@@ -26,6 +26,7 @@ func main() {
 		"曾經我身上是沒有議題的，直到我的膝蓋中了一箭",
 		"那一天，人類終於回想起了，曾經一度支配他們的恐懼，還有議題沒處理完的屈辱",
 		"議題太多、時間太少",
+		"想不到還有這麼多沒人負責的議題吧，因為你只想到你自己！",
 	}
 
 	premessages := []string{
@@ -40,6 +41,7 @@ func main() {
 		"生命會找到出路，但沒有負責人的議題不會",
 		"你是擅長下面這些議題的朋友嗎",
 		"An issue a day, keeps the doctor away.",
+		"以下開放問答",
 	}
 
 	pwd, _ := osext.ExecutableFolder()
@@ -118,9 +120,7 @@ func main() {
 					attaches = append(attaches, attach)
 				}
 			}
-		}
 
-		if count > 0 {
 			msg["attachments"] = attaches
 		}
 
